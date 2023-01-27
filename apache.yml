@@ -1,0 +1,29 @@
+---
+- name: install apache web server
+  hosts: all
+  become: true
+
+  tasks:
+    - name: install apache from yum repo
+      yum:
+        name: httpd
+        state: present
+
+    - name: start the httpd service
+      service:
+        name: httpd
+        enabled: true
+    - name: install git
+      yum:
+        name: git
+        state: present
+
+    - name: deploy code from git repo
+      git:
+        force: yes
+        repo: https://github.com/saya1a/web-server
+        dest: /var/www/html
+    - name: restart apache
+      service:
+        name: httpd
+        state: restarted
